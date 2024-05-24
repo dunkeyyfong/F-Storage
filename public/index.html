@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Fetch API</h1>
+    <ul id="user-list"></ul>
+    <script>
+        async function fetchAPI() {
+            try {
+                const res = await fetch('http://localhost:3000/api/v1/products');
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await res.json();
+                console.log(data);
+                const usersList = document.getElementById('user-list');
+                usersList.innerHTML = '';
+
+                // Không cần kiểm tra data.data, vì data là mảng các đối tượng người dùng
+                if (Array.isArray(data)) {
+                    data.forEach(user => {
+                        const li = document.createElement('li');
+                        li.textContent = `ID: ${user.id} - Name: ${user.name} - Email: ${user.email}`;
+                        usersList.appendChild(li);
+                    });
+                } else {
+                    console.error('Data format is not correct:', data);
+                }
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+            }
+        }
+
+        // Gọi hàm fetchAPI khi trang được tải
+        window.onload = fetchAPI;
+    </script>
+</body>
+</html>
